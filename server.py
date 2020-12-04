@@ -10,6 +10,14 @@ IP = 'ip'
 BRIGHTNESS = 'brightness'
 COLORTEMP = 'colortemp'
 
+SUCCESS_RESPONSE = {
+    "status": "success"
+}
+
+ERROR_RESPONSE = {
+    "status": "fail"
+}
+
 @app.route('/discover', methods=['GET'])
 def discover():
     result = discover_bulbs()
@@ -32,9 +40,9 @@ def turnon():
         except BulbException as e:
             print(e)
             return str(e), 400
-        return 'success'
+        return SUCCESS_RESPONSE
     else:
-        return 'bad request!', 400
+        return ERROR_RESPONSE, 400
 
 @app.route('/turnoff', methods=['POST'])
 def turnoff():
@@ -46,10 +54,10 @@ def turnoff():
             bulb.turn_off()
         except BulbException as e:
             print(e)
-            return str(e), 404
-        return 'success'
+            return ERROR_RESPONSE
+        return SUCCESS_RESPONSE
     else:
-        return 'bad request!', 400
+        return ERROR_RESPONSE, 400
 
 @app.route('/setbrightness', methods=['POST'])
 def setbrightness():
@@ -58,9 +66,9 @@ def setbrightness():
     if IP in content and BRIGHTNESS in content and len(content) == 2:
         bulb = Bulb(content[IP])
         bulb.set_brightness(int(content[BRIGHTNESS]))
-        return 'success'
+        return SUCCESS_RESPONSE
     else:
-        return 'bad request!', 400
+        return ERROR_RESPONSE, 400
 
 @app.route('/setcolortemp', methods=['POST'])
 def setcolortemp():
@@ -69,9 +77,9 @@ def setcolortemp():
     if IP in content and COLORTEMP in content and len(content) == 2:
         bulb = Bulb(content[IP])
         bulb.set_color_temp(int(content[COLORTEMP]))
-        return 'success'
+        return SUCCESS_RESPONSE
     else:
-        return 'bad request!', 400
+        return ERROR_RESPONSE, 400
 
 
 if __name__ == '__main__':
