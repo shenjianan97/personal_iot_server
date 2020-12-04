@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from yeelight import discover_bulbs, Bulb
 import json
 
@@ -40,9 +40,9 @@ def turnon():
         except BulbException as e:
             print(e)
             return str(e), 400
-        return SUCCESS_RESPONSE
+        return jsonify(SUCCESS_RESPONSE)
     else:
-        return ERROR_RESPONSE, 400
+        return jsonify(ERROR_RESPONSE), 400
 
 @app.route('/turnoff', methods=['POST'])
 def turnoff():
@@ -54,10 +54,10 @@ def turnoff():
             bulb.turn_off()
         except BulbException as e:
             print(e)
-            return ERROR_RESPONSE
-        return SUCCESS_RESPONSE
+            return jsonify(ERROR_RESPONSE)
+        return jsonify(SUCCESS_RESPONSE)
     else:
-        return ERROR_RESPONSE, 400
+        return jsonify(ERROR_RESPONSE), 400
 
 @app.route('/setbrightness', methods=['POST'])
 def setbrightness():
@@ -66,9 +66,9 @@ def setbrightness():
     if IP in content and BRIGHTNESS in content and len(content) == 2:
         bulb = Bulb(content[IP])
         bulb.set_brightness(int(content[BRIGHTNESS]))
-        return SUCCESS_RESPONSE
+        return jsonify(SUCCESS_RESPONSE)
     else:
-        return ERROR_RESPONSE, 400
+        return jsonify(ERROR_RESPONSE), 400
 
 @app.route('/setcolortemp', methods=['POST'])
 def setcolortemp():
@@ -77,9 +77,9 @@ def setcolortemp():
     if IP in content and COLORTEMP in content and len(content) == 2:
         bulb = Bulb(content[IP])
         bulb.set_color_temp(int(content[COLORTEMP]))
-        return SUCCESS_RESPONSE
+        return jsonify(SUCCESS_RESPONSE)
     else:
-        return ERROR_RESPONSE, 400
+        return jsonify(ERROR_RESPONSE), 400
 
 
 if __name__ == '__main__':
